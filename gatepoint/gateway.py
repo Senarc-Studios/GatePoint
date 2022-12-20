@@ -1,3 +1,5 @@
+import aiohttp
+
 from gatepoint.interaction import CommandInteraction, ButtonInteraction
 
 from nacl.signing import VerifyKey
@@ -9,16 +11,31 @@ from typing import Union
 
 class GatewayClient:
     def __init__(self, api_version: int, secret_key: str, public_key: str, token: str, port: int = 80):
-        self.api_version = api_version
+        self.discord_prefix = f"https://discord.com/api/v{api_version}"
         self.secret_key = secret_key
         self.public_key = public_key
         self.token = token
         self.port = port
+        self.session = aiohttp.ClientSession(
+            headers = {
+                "Authorization": f"Bot {self.token}",
+                "Content-Type": "application/json",
+                "User-Agent": "GatePoint API Gateway"
+            }
+        )
 
         self.autocomplete = {}
         self.commands = {}
         self.buttons = {}
         self.events = {}
+
+    async def request(self, method: str, endpoint: str, json: dict = None):
+        async with self.session.request(
+            method,
+            f"{self.discord_prefix}{endpoint}",
+            json = json
+        ) as response:
+            return await response.json()
 
     def register(self, interaction: Union[CommandInteraction, ButtonInteraction]):
         def decorator(func):
