@@ -1,4 +1,4 @@
-discord.py
+GatePoint
 ==========
 
 .. image:: https://discord.com/api/guilds/886543799843688498/embed.png
