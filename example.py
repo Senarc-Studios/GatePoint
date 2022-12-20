@@ -8,15 +8,7 @@ gateway = Discord.GatewayClient(
     token =  "TOKEN"
 )
 
-@gateway.command("test")
-@gateway.choices(
-    "choice",
-    [
-        Choice("Name", "value"),
-        Choice("Name2", "value2")
-    ]
-)
-@gateway.description("This is a test command.")
+@
 async def test_command(
     interaction: Interaction,
     choice: Optional[Choice],

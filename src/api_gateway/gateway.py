@@ -27,7 +27,63 @@ class GatewayClient:
                     }
                 }
             )
-            self.commands[name] = func
+            return func
+        return decorator
+
+    def subcommand_group(self, command: str, subcommand_group: str, subcommand: str):
+        def decorator(func):
+            self.commands.update(
+                {
+                    command: {
+                        "function": self.commands[command].get("function"),
+                        "description": self.commands[command].get("description"),
+                        "options": self.commands[command].get("options").append(
+                            {
+                                "name": subcommand_group,
+                                "type": 2,
+                                "description": None,
+                                "options": [
+                                    {
+                                        "name": subcommand,
+                                        "type": 1,
+                                        "description": self.commands.get("description"),
+                                        "options": self.commands.get("options")
+                                    }
+                                ]
+                            }
+                        )
+                    }
+                }
+            ) if self.commands[command].get("options") is not None else self.commands.update(
+                {
+                    command: {
+                        "function": self.commands[command].get("function"),
+                        "description": self.commands.get("description"),
+
+                    }
+                }
+            )
+            return func
+        return decorator
+
+    def subcommand(self, command: str, subcommand: str):
+        def decorator(func):
+            self.commands.update(
+                {
+                    command: {
+                        "function": self.commands[command].get("function"),
+                        "description": self.commands.get("description"),
+                        "options": self.commands.get("options").append(
+                            {
+                                "name": subcommand,
+                                "type": 1,
+                                "description": self.commands.get("description"),
+                                "options": self.commands.get("options")
+                            }
+                        )
+                    }
+                }
+            )
             return func
         return decorator
 
