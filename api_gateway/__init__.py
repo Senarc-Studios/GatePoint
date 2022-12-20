@@ -20,9 +20,9 @@ __path__ = __import__('pkgutil').extend_path(__path__, __name__)
 import logging
 from typing import NamedTuple, Literal
 
-from gateway import GatewayClient
-from interaction import Interaction, Choice, Option, CommandInteraction, AutoComplete
-from object_types import OptionType
+from .gateway import GatewayClient
+from .interaction import Interaction, Choice, Option, CommandInteraction, AutoComplete
+from .object_types import OptionType
 
 class VersionInfo(NamedTuple):
     major: int
