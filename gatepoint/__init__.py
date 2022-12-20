@@ -9,7 +9,7 @@ A Discord Library API similar to discord.py.
 
 """
 
-__title__ = 'api-gateway'
+__title__ = 'gatepoint'
 __author__ = 'BenitzCoding'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2022-present BenitzCoding'

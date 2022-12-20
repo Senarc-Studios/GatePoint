@@ -41,11 +41,11 @@ def show_version() -> None:
 
     entries.append('- Python v{0.major}.{0.minor}.{0.micro}-{0.releaselevel}'.format(sys.version_info))
     version_info = gateway.version_info
-    entries.append('- api-gateway v{0.major}.{0.minor}.{0.micro}-{0.releaselevel}'.format(version_info))
+    entries.append('- gatepoint v{0.major}.{0.minor}.{0.micro}-{0.releaselevel}'.format(version_info))
     if version_info.releaselevel != 'final':
-        version = importlib.metadata.version('api-gateway')
+        version = importlib.metadata.version('gatepoint')
         if version:
-            entries.append(f'    - api-gateway metadata: v{version}')
+            entries.append(f'    - gatepoint metadata: v{version}')
 
     entries.append(f'- aiohttp v{aiohttp.__version__}')
     uname = platform.uname()
@@ -148,7 +148,7 @@ def to_path(parser: argparse.ArgumentParser, name: str, *, replace_spaces: bool 
     return Path(name)
 
 def parse_args() -> Tuple[argparse.ArgumentParser, argparse.Namespace]:
-    parser = argparse.ArgumentParser(prog='api-gateway', description='Tools for helping with api-gateway.')
+    parser = argparse.ArgumentParser(prog='gatepoint', description='Tools for helping with gatepoint.')
     parser.add_argument('-v', '--version', action='store_true', help='shows the library version')
     parser.set_defaults(func=core)
 

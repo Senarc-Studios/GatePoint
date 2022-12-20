@@ -6,7 +6,7 @@ with open('requirements.txt') as f:
 	requirements = f.read().splitlines()
 
 version = ''
-with open('api_gateway/__init__.py') as f:
+with open('gatepoint/__init__.py') as f:
 	version = re.search(
 		r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
 		f.read(),
@@ -68,16 +68,16 @@ extras_require = {
 }
 
 packages = [
-	'api_gateway'
+	'gatepoint'
 ]
 
 setup(
-	name = 'api-gateway',
+	name = 'gatepoint',
 	author = 'BenitzCoding',
-	url = 'https://github.com/Senarc-Studios/API-Gateway',
+	url = 'https://github.com/Senarc-Studios/GatePoint',
 	project_urls = {
-		"Documentation": "https://discordpy.readthedocs.io/en/latest/",
-		"Issue tracker": "https://github.com/Senarc-Studios/API-Gateway/issues"
+		"Documentation": "https://gatepoint.readthedocs.io/en/latest/",
+		"Issue tracker": "https://github.com/Senarc-Studios/GatePoint/issues"
 	},
 	version = version,
 	packages = packages,

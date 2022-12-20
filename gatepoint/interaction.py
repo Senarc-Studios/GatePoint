@@ -1,4 +1,4 @@
-from api_gateway.object_types import OptionType
+from gatepoint.object_types import OptionType
 
 from typing import List, Optional
 

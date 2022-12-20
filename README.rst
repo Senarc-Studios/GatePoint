@@ -48,10 +48,10 @@ Quick Example
 
 .. code:: py
 
-    import api_gateway
-    from api_gateway import CommandInteraction
+    import gatepoint
+    from gatepoint import CommandInteraction
 
-    Client = api_gateway.GatewayClient(
+    Client = gatepoint.GatewayClient(
         api_version = 11,
         secret_key = "SECRET",
         public_key = "PUBLIC",

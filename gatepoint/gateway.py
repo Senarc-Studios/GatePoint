@@ -1,4 +1,4 @@
-from api_gateway.interaction import CommandInteraction, ButtonInteraction
+from gatepoint.interaction import CommandInteraction, ButtonInteraction
 
 from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError

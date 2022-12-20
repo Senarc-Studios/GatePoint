@@ -1,4 +1,4 @@
-from api_gateway import GatewayClient, Interaction, Choice, AutoComplete
+from gatepoint import GatewayClient, Interaction, Choice, AutoComplete
 from typing import Optional
 
 gateway = GatewayClient(
