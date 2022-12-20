@@ -68,7 +68,7 @@ extras_require = {
 }
 
 packages = [
-	'discord'
+	'api_gateway'
 ]
 
 setup(
