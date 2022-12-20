@@ -13,7 +13,7 @@ __title__ = 'gatepoint'
 __author__ = 'BenitzCoding'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2022-present BenitzCoding'
-__version__ = '0.1a'
+__version__ = '0.1'
 
 __path__ = __import__('pkgutil').extend_path(__path__, __name__)
 
