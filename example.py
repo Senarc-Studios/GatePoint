@@ -1,20 +1,39 @@
-from api_gateway import Discord, Interaction, Choice, AutoComplete
+from api_gateway import GatewayClient, Interaction, Choice, AutoComplete
 from typing import Optional
 
-gateway = Discord.GatewayClient(
+gateway = GatewayClient(
     api_version = 11,
     secret_key = "SECRET",
     public_key = "PUBLIC",
     token =  "TOKEN"
 )
 
-@
+@gateway.register(
+    CommandInteraction(
+        name = "test",
+        description = "Test command",
+        options = [
+            Option(
+                type = OptionType.STRING,
+                name = "name",
+                description = "Name",
+                required = True
+            ),
+            Option(
+                type = OptionType.STRING,
+                name = "name2",
+                description = "Name2",
+                required = False
+            )
+        ]
+    )
+)
 async def test_command(
     interaction: Interaction,
-    choice: Optional[Choice],
-    autocomplete: AutoComplete("name")
+    name: Optional[Choice],
+    name2: AutoComplete("name")
 ):
-    await interaction.reply("Hello World!", ephemeral = True)
+    interaction.reply("Hello World!", ephemeral = True)
 
 @gateway.autocomplete("name")
 async def test_autocomplete(interaction: Interaction):

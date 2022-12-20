@@ -1,7 +1,11 @@
+from api_gateway.interaction import CommandInteraction, ButtonInteraction
+
 from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
 
 from fastapi import FastAPI, Request
+
+from typing import Union
 
 class GatewayClient:
     def __init__(self, api_version: int, secret_key: str, public_key: str, token: str, port: int = 80):
@@ -16,92 +20,12 @@ class GatewayClient:
         self.buttons = {}
         self.events = {}
 
-    def command(self, name: str):
+    def register(self, interaction: Union[CommandInteraction, ButtonInteraction]):
         def decorator(func):
-            self.commands.update(
-                {
-                    name: {
-                        "function": func,
-                        "description": self.commands.get("description"),
-                        "options": self.commands.get("options")
-                    }
-                }
-            )
-            return func
-        return decorator
-
-    def subcommand_group(self, command: str, subcommand_group: str, subcommand: str):
-        def decorator(func):
-            self.commands.update(
-                {
-                    command: {
-                        "function": self.commands[command].get("function"),
-                        "description": self.commands[command].get("description"),
-                        "options": self.commands[command].get("options").append(
-                            {
-                                "name": subcommand_group,
-                                "type": 2,
-                                "description": None,
-                                "options": [
-                                    {
-                                        "name": subcommand,
-                                        "type": 1,
-                                        "description": self.commands.get("description"),
-                                        "options": self.commands.get("options")
-                                    }
-                                ]
-                            }
-                        )
-                    }
-                }
-            ) if self.commands[command].get("options") is not None else self.commands.update(
-                {
-                    command: {
-                        "function": self.commands[command].get("function"),
-                        "description": self.commands.get("description"),
-
-                    }
-                }
-            )
-            return func
-        return decorator
-
-    def subcommand(self, command: str, subcommand: str):
-        def decorator(func):
-            self.commands.update(
-                {
-                    command: {
-                        "function": self.commands[command].get("function"),
-                        "description": self.commands.get("description"),
-                        "options": self.commands.get("options").append(
-                            {
-                                "name": subcommand,
-                                "type": 1,
-                                "description": self.commands.get("description"),
-                                "options": self.commands.get("options")
-                            }
-                        )
-                    }
-                }
-            )
-            return func
-        return decorator
-
-    def button(self, custom_id: str):
-        def decorator(func):
-            self.buttons[custom_id] = func
-            return func
-        return decorator
-
-    def description(self, description: str):
-        def decorator(func):
-            self.commands[func.__name__].description = description
-            return func
-        return decorator
-
-    def button(self, custom_id: str):
-        def decorator(func):
-            self.commands[custom_id] = func
+            if isinstance(interaction, CommandInteraction):
+                self.commands[interaction.name] = func
+            elif isinstance(interaction, ButtonInteraction):
+                self.buttons[interaction.custom_id] = func
             return func
         return decorator
 
