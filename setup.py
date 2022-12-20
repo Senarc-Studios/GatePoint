@@ -6,7 +6,7 @@ with open('requirements.txt') as f:
 	requirements = f.read().splitlines()
 
 version = ''
-with open('api-gateway/__init__.py') as f:
+with open('api_gateway/__init__.py') as f:
 	version = re.search(
 		r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
 		f.read(),
