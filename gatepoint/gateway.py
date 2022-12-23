@@ -55,18 +55,23 @@ class GatewayClient:
             raise ValueError("Invalid token provided.")
 
     async def request(self, method: str, endpoint: str, json: dict = None):
+        print("test3")
         async with self.session as session:
+            print("test4")
             response = await session.request(
                 method,
                 f"{self.discord_prefix}{endpoint}",
                 json = json
             )
+            print("test5")
             return await response.json()
 
     def register(self, interaction: Union[CommandInteraction, ButtonInteraction]):
+        print("test1")
         def decorator(func):
             if isinstance(interaction, CommandInteraction):
                 self.commands[interaction.name] = func
+                print("test2")
                 if interaction.guild_only:
                     for id_ in interaction.guild_ids:
                         asyncio.run(
