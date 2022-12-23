@@ -68,7 +68,7 @@ class GatewayClient:
 
         @app.get("/")
         async def index(request: Request):
-            return "This is a Discord Interaction API.", 200
+            return "This is a Discord Interaction API."
 
         @app.post("/interaction")
         async def interaction(request: Request):
@@ -76,12 +76,22 @@ class GatewayClient:
             verify_key = VerifyKey(bytes.fromhex(self.public_key))
             signature = request.headers.get("X-Signature-Ed25519")
             timestamp = request.headers.get("X-Signature-Timestamp")
+
+            if not signature or not timestamp:
+                raise HTTPException(
+                    detail = 'missing request signature',
+                    status_code = 401
+                )
+
             body = (await request.body()).decode("utf-8")
 
             try:
                 verify_key.verify(f'{timestamp}{body}'.encode(), bytes.fromhex(signature))
             except BadSignatureError:
-                return 'invalid request signature', 401
+                return HTTPException(
+                    detail = 'invalid request signature',
+                    status_code = 401
+                )
 
             # Process the request.
             interaction_payload = await request.json()
