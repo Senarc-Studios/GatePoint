@@ -13,6 +13,9 @@ class DictObject:
 class Interaction:
     def __init__(self, interaction_payload: dict):
         for key, value in interaction_payload.items():
+            if isinstance(value, dict):
+                setattr(self, key, DictObject(value))
+                continue
             setattr(self, key, value)
 
     def respond(self, response: dict):
