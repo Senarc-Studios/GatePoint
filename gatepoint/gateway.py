@@ -67,8 +67,28 @@ class GatewayClient:
         def decorator(func):
             if isinstance(interaction, CommandInteraction):
                 self.commands[interaction.name] = func
+                if interaction.guild_only:
+                    for id_ in interaction.guild_ids:
+                        asyncio.run(
+                            self.request(
+                                "POST",
+                                f"/applications/{self.bot.id}/guilds/{id_}/commands",
+                                json = interaction.register_json
+                            )
+                        )
+
+                else:
+                    asyncio.run(
+                        self.request(
+                            "POST",
+                            f"/applications/{self.bot.id}/commands",
+                            json = interaction.register_json
+                        )
+                    )
+
             elif isinstance(interaction, ButtonInteraction):
                 self.buttons[interaction.custom_id] = func
+
             return func
         return decorator
 
