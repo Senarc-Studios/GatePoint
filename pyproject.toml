@@ -1,4 +1,32 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
 [project]
-dynamic = ["dependencies"]
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
+name = "gatepoint"
+description = "A Python library API for the Discord."
+readme = "README.rst"
+requires-python = ">=3.7"
+keywords = ["gatepoint", "fastapi", "api", "client", "wrapper", "discord"]
+license = {text = "MIT"}
+classifiers = [
+    "Framework :: FastAPI",
+    'Development Status :: 5 - Production/Stable',
+    'License :: OSI Approved :: MIT License',
+    'Intended Audience :: Developers',
+    'Natural Language :: English',
+    'Operating System :: OS Independent',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Topic :: Internet',
+    'Topic :: Software Development :: Libraries',
+    'Topic :: Software Development :: Libraries :: Python Modules',
+    'Topic :: Utilities',
+    'Typing :: Typed'
+]
+dependencies = [
+    "aiohttp",
+    "uvicorn"
+]
+dynamic = ["version"]
