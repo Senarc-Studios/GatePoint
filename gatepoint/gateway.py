@@ -9,7 +9,15 @@ from fastapi import FastAPI, Request
 
 from typing import Union
 
+class Bot:
+    def __init__(self, json: dict):
+        setattr(self, "id", json["id"])
+        setattr(self, "avatar", json["avatar"])
+        setattr(self, "username", json["username"])
+        setattr(self, "discriminator", json["discriminator"])
+
 class GatewayClient:
+
     def __init__(self, api_version: int, secret_key: str, public_key: str, token: str, port: int = 80):
         self.discord_prefix = f"https://discord.com/api/v{api_version}"
         self.secret_key = secret_key
