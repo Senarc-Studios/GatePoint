@@ -141,7 +141,7 @@ class GatewayClient:
 
             elif interaction_payload["type"] == 2:
                 if interaction_payload["data"]["name"] in self.commands:
-                    await self.events["interaction_receive"](interaction_payload)
+                    await self.events.get("interaction_receive")(interaction_payload) if self.events.get("interaction_receive") else None
                     return await self.commands[interaction_payload["data"]["name"]](Interaction(interaction_payload))
 
                 return {
@@ -154,7 +154,7 @@ class GatewayClient:
 
             elif interaction_payload["type"] == 3:
                 if interaction_payload["data"]["custom_id"] in self.buttons:
-                    await self.events["interaction_receive"](interaction_payload)
+                    await self.events.get("interaction_receive")(interaction_payload) if self.events.get("interaction_receive") else None
                     return await self.buttons[interaction_payload["data"]["custom_id"]](Interaction(interaction_payload))
 
                 return {
