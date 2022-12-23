@@ -1,11 +1,14 @@
+import uvicorn
 import aiohttp
+import asyncio
+import requests
 
 from gatepoint.interaction import CommandInteraction, ButtonInteraction
 
 from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 
 from typing import Union
 
@@ -127,7 +130,8 @@ class GatewayClient:
                     }
                 }
 
-        app.run(
+        uvicorn.run(
+            app,
             host = "127.0.0.1",
             port = self.port
         )
