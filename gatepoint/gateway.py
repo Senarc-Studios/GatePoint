@@ -49,16 +49,13 @@ class GatewayClient:
             raise ValueError("Invalid token provided.")
 
     async def request(self, method: str, endpoint: str, json: dict = None):
-        if self.session is None:
-            self.session = aiohttp.ClientSession(
-                headers = {
-                    "Authorization": f"Bot {self.token}",
-                    "Content-Type": "application/json",
-                    "User-Agent": "GatePoint API Gateway"
-                }
-            )
-
-        async with self.session as session:
+        async with aiohttp.ClientSession(
+            headers = {
+                "Authorization": f"Bot {self.token}",
+                "Content-Type": "application/json",
+                "User-Agent": "GatePoint API Gateway"
+            }
+        ) as session:
             async with session.request(
                 method,
                 f"{self.discord_prefix}{endpoint}",
