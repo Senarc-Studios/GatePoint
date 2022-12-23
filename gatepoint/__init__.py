@@ -21,7 +21,7 @@ import logging
 from typing import NamedTuple, Literal
 
 from .gateway import GatewayClient
-from .interaction import Interaction, Choice, Option, CommandInteraction, AutoComplete
+from .interaction import Interaction, Choice, Option, CommandInteraction, ButtonInteraction
 from .object_types import OptionType
 
 class VersionInfo(NamedTuple):
