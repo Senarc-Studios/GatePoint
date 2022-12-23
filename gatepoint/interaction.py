@@ -81,3 +81,20 @@ class CommandInteraction:
 
     def __dict__(self):
         return self.register_json
+
+class ButtonInteraction:
+    def __init__(
+        self,
+        custom_id: str,
+        label: str,
+        emoji: str = None,
+    ):
+        self.custom_id = custom_id
+        self.label = label
+        self.emoji = emoji
+
+        self.register_json = {
+            "custom_id": self.custom_id,
+            "label": self.label,
+            "emoji": self.emoji
+        }
