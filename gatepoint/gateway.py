@@ -63,7 +63,7 @@ class GatewayClient:
             ) as response:
                 return await response.json()
 
-    def register(self, interaction: Union[CommandInteraction, ButtonInteraction]):
+    def on(self, interaction: Union[str, CommandInteraction, ButtonInteraction]):
         def decorator(func):
             if isinstance(interaction, CommandInteraction):
                 self.commands[interaction.name] = func
@@ -89,12 +89,9 @@ class GatewayClient:
             elif isinstance(interaction, ButtonInteraction):
                 self.buttons[interaction.custom_id] = func
 
-            return func
-        return decorator
+            elif isinstance(interaction, str):
+                self.events[interaction] = func
 
-    def event(self, event: str):
-        def decorator(func):
-            self.events[event] = func
             return func
         return decorator
 
