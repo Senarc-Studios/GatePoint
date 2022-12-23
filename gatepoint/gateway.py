@@ -3,7 +3,7 @@ import aiohttp
 import asyncio
 import requests
 
-from gatepoint.interaction import CommandInteraction, ButtonInteraction
+from gatepoint.interaction import Interaction, CommandInteraction, ButtonInteraction
 
 from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
@@ -142,7 +142,7 @@ class GatewayClient:
             elif interaction_payload["type"] == 2:
                 if interaction_payload["data"]["name"] in self.commands:
                     await self.events["interaction_receive"](interaction_payload)
-                    return await self.commands[interaction_payload["data"]["name"]](interaction_payload)
+                    return await self.commands[interaction_payload["data"]["name"]](Interaction(interaction_payload))
 
                 return {
                     "type": 4,
@@ -155,7 +155,7 @@ class GatewayClient:
             elif interaction_payload["type"] == 3:
                 if interaction_payload["data"]["custom_id"] in self.buttons:
                     await self.events["interaction_receive"](interaction_payload)
-                    return await self.buttons[interaction_payload["data"]["custom_id"]](interaction_payload)
+                    return await self.buttons[interaction_payload["data"]["custom_id"]](Interaction(interaction_payload))
 
                 return {
                     "type": 4,
@@ -168,7 +168,7 @@ class GatewayClient:
             elif interaction_payload["type"] == 4:
                 if interaction_payload["data"]["custom_id"] in self.buttons:
                     await self.events["interaction_receive"](interaction_payload)
-                    return await self.buttons[interaction_payload["data"]["custom_id"]](interaction_payload)
+                    return await self.buttons[interaction_payload["data"]["custom_id"]](Interaction(interaction_payload))
 
                 return {
                     "type": 4,
