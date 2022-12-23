@@ -58,12 +58,12 @@ Quick Example
         token =  "TOKEN"
     )
 
-    @Client.register(
-        CommandInteraction(
-            name = "ping",
-            description = "Pong!"
-        )
+    ping_command = CommandInteraction(
+        name = "ping",
+        description = "Pong!"
     )
+
+    @Client.on(ping_command)
     async def ping(interaction):
         await interaction.reply('pong!')
 
