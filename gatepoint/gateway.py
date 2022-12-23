@@ -55,11 +55,12 @@ class GatewayClient:
             raise ValueError("Invalid token provided.")
 
     async def request(self, method: str, endpoint: str, json: dict = None):
-        async with self.session.request(
-            method,
-            f"{self.discord_prefix}{endpoint}",
-            json = json
-        ) as response:
+        async with self.session as session:
+            response = await session.request(
+                method,
+                f"{self.discord_prefix}{endpoint}",
+                json = json
+            )
             return await response.json()
 
     def register(self, interaction: Union[CommandInteraction, ButtonInteraction]):
