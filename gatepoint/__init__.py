@@ -13,7 +13,7 @@ __title__ = 'gatepoint'
 __author__ = 'BenitzCoding'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2022-present BenitzCoding'
-__version__ = '0.1'
+__version__ = '0.2'
 
 __path__ = __import__('pkgutil').extend_path(__path__, __name__)
 
@@ -34,7 +34,7 @@ class VersionInfo(NamedTuple):
 
 version_info: VersionInfo = VersionInfo(
     major = 0,
-    minor = 1,
+    minor = 2,
     micro = 0,
     releaselevel = "alpha",
     serial = 0
