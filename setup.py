@@ -90,6 +90,7 @@ setup(
 	extras_require = extras_require,
 	python_requires = '>=3.8.0',
 	classifiers = [
+		"Framework :: FastAPI",
 		'Development Status :: 5 - Production/Stable',
 		'License :: OSI Approved :: MIT License',
 		'Intended Audience :: Developers',
