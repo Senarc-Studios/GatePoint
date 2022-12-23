@@ -27,13 +27,7 @@ class GatewayClient:
         self.public_key = public_key
         self.token = token
         self.port = port
-        self.session = aiohttp.ClientSession(
-            headers = {
-                "Authorization": f"Bot {self.token}",
-                "Content-Type": "application/json",
-                "User-Agent": "GatePoint API Gateway"
-            }
-        )
+        self.session = None
 
         self.autocomplete = {}
         self.commands = {}
@@ -56,15 +50,24 @@ class GatewayClient:
 
     async def request(self, method: str, endpoint: str, json: dict = None):
         print("test3")
+        if self.session is None:
+            self.session = aiohttp.ClientSession(
+                headers = {
+                    "Authorization": f"Bot {self.token}",
+                    "Content-Type": "application/json",
+                    "User-Agent": "GatePoint API Gateway"
+                }
+            )
+
         async with self.session as session:
             print("test4")
-            response = await session.request(
+            async with session.request(
                 method,
                 f"{self.discord_prefix}{endpoint}",
                 json = json
-            )
             print("test5")
-            return await response.json()
+            ) as response:
+                return await response.json()
 
     def register(self, interaction: Union[CommandInteraction, ButtonInteraction]):
         print("test1")
