@@ -40,6 +40,20 @@ class GatewayClient:
         self.buttons = {}
         self.events = {}
 
+        response = requests.get(
+            f"{self.discord_prefix}/users/@me",
+            headers = {
+                "Authorization": f"Bot {self.token}",
+                "Content-Type": "application/json",
+                "User-Agent": "GatePoint API Gateway"
+            }
+        )
+        if response.status_code == 200:
+            self.bot = Bot(response.json())
+
+        else:
+            raise ValueError("Invalid token provided.")
+
     async def request(self, method: str, endpoint: str, json: dict = None):
         async with self.session.request(
             method,
