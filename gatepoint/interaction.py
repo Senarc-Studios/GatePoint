@@ -2,6 +2,14 @@ from gatepoint.object_types import OptionType
 
 from typing import List, Optional
 
+class DictObject:
+    def __init__(self, json: dict):
+        for key, value in json.items():
+            if isinstance(value, dict):
+                setattr(self, key, DictObject(value))
+                continue
+            setattr(self, key, value)
+
 class Interaction:
     def __init__(self, interaction_payload: dict):
         for key, value in interaction_payload.items():
