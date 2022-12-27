@@ -122,8 +122,14 @@ class GatewayClient:
     def run(self):
         app = FastAPI()
 
+        @app.on_event("startup")
+        async def startup_event():
+            output("GatePoint API Dispatched, listening for interactions.")
+            for event in self.events.get("startup") or []:
+                await event()
+
         @app.get("/")
-        async def index(request: Request):
+        async def index():
             return "This is a Discord Interaction API."
 
         @app.post("/interaction")
@@ -159,7 +165,15 @@ class GatewayClient:
 
             elif interaction_payload["type"] == 2:
                 if interaction_payload["data"]["name"] in self.commands:
-                    await self.events.get("interaction_receive")(Interaction(interaction_payload)) if self.events.get("interaction_receive") else None
+                    print(self.events)
+                    for event in self.events.get("interaction_receive") or []:
+                        event: Callable
+                        await event(Interaction(interaction_payload))
+
+                    for event in self.events.get("command_receive") or []:
+                        event: Callable
+                        await event(Interaction(interaction_payload))
+
                     return await self.commands[interaction_payload["data"]["name"]](Interaction(interaction_payload))
 
                 return {
@@ -172,7 +186,14 @@ class GatewayClient:
 
             elif interaction_payload["type"] == 3:
                 if interaction_payload["data"]["custom_id"] in self.buttons:
-                    await self.events.get("interaction_receive")(Interaction(interaction_payload)) if self.events.get("interaction_receive") else None
+                    for event in self.events.get("interaction_receive") or []:
+                        event: Callable
+                        await event(Interaction(interaction_payload))
+
+                    for event in self.events.get("button_click") or []:
+                        event: Callable
+                        await event(Interaction(interaction_payload))
+
                     return await self.buttons[interaction_payload["data"]["custom_id"]](Interaction(interaction_payload))
 
                 return {
