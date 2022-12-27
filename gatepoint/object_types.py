@@ -12,3 +12,10 @@ class InteractionType:
     SLASH_COMMAND = 1
     USER_COMMAND = 2
     MESSAGE_COMMAND = 3
+
+class ButtonStyle:
+    PRIMARY = 1
+    SECONDARY = 2
+    SUCCESS = 3
+    DANGER = 4
+    LINK = 5
