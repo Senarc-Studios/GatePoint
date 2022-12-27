@@ -204,18 +204,17 @@ class GatewayClient:
                     }
                 }
 
-            elif interaction_payload["type"] == 4:
-                if interaction_payload["data"]["custom_id"] in self.buttons:
-                    await self.events["interaction_receive"](interaction_payload)
-                    return await self.buttons[interaction_payload["data"]["custom_id"]](Interaction(interaction_payload))
-
+            elif interaction_payload["type"] >= 4 or interaction_payload["type"] < 12:
                 return {
                     "type": 4,
                     "data": {
-                        "content": "This button is not registered with Interaction Gateway API.",
+                        "content": "This interaction is not yet supported by Interaction Gateway API.",
                         "flags": 64
                     }
                 }
+
+            else:
+                raise HTTPException(detail = "Interaction not recognised by Interaction Gateway API.", status_code = 400)
 
         uvicorn.run(
             app,
