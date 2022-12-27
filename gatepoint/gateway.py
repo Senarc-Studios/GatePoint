@@ -10,7 +10,7 @@ from nacl.exceptions import BadSignatureError
 
 from fastapi import FastAPI, Request, HTTPException
 
-from typing import Union
+from typing import Callable, Union
 
 def output(content, type_ = None):
     if type_ == "ERROR":
@@ -81,8 +81,8 @@ class GatewayClient:
             ) as response:
                 return await response.json()
 
-        def decorator(func):
     def command(self, *args, **kwargs):
+        def decorator(func: Callable):
             interaction = CommandInteraction(*args, **kwargs)
             self.commands[interaction.name] = func
             if interaction.guild_only:
@@ -107,12 +107,14 @@ class GatewayClient:
         return decorator
 
     def button(self, *args, **kwargs):
+        def decorator(func: Callable):
             interaction = ButtonInteraction(*args, **kwargs)
             self.buttons[interaction.custom_id] = func
             return func
         return decorator
 
     def on(self, event: str):
+        def decorator(func: Callable):
             event_list = self.events.get(event).append(func) if self.events.get(event) else [func]
             self.events[event] = event_list
 
@@ -126,6 +128,7 @@ class GatewayClient:
         async def startup_event():
             output("GatePoint API Dispatched, listening for interactions.")
             for event in self.events.get("startup") or []:
+                event: Callable
                 await event()
 
         @app.get("/")
