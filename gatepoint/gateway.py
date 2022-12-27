@@ -221,4 +221,9 @@ class GatewayClient:
             app,
             host = "127.0.0.1",
             port = self.port
+        ) if self.verbose else uvicorn.run(
+            app,
+            log_level = "critical",
+            host = "127.0.0.1",
+            port = self.port
         )
