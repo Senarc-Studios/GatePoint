@@ -106,6 +106,15 @@ class GatewayClient:
             return func
         return decorator
 
+    def button(self, *args, **kwargs):
+            interaction = ButtonInteraction(*args, **kwargs)
+            self.buttons[interaction.custom_id] = func
+            return func
+        return decorator
+
+    def on(self, event: str):
+            event_list = self.events.get(event).append(func) if self.events.get(event) else [func]
+            self.events[event] = event_list
 
             return func
         return decorator
