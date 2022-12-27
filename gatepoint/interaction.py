@@ -87,7 +87,7 @@ class CommandInteraction:
         default_permission: bool = True
     ):
         self.name = name
-        self.description = description
+        self.description = description or "No description."
         self.guild_ids = guild_ids
         self.guild_only = True if guild_ids else False
         self.options = options
