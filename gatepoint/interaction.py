@@ -12,11 +12,15 @@ class DictObject:
 
 class Interaction:
     def __init__(self, interaction_payload: dict):
+        self.json_ = interaction_payload
         for key, value in interaction_payload.items():
             if isinstance(value, dict):
                 setattr(self, key, DictObject(value))
                 continue
             setattr(self, key, value)
+
+    def __dict__(self):
+        return self.json_
 
     def respond(self, response: dict):
         return response
@@ -65,12 +69,19 @@ class Option:
             "value": self.value
         }
 
+class Snowflake(int):
+    def __init__(self, snowflake: int):
+        if not len(str(snowflake)) in (17, 18, 19):
+            raise ValueError("Invalid snowflake.")
+
+        self.snowflake = snowflake
+
 class CommandInteraction:
     def __init__(
         self,
         name: str,
-        description: str,
-        guild_ids: List[id] = None,
+        description: str = None,
+        guild_ids: List[Snowflake] = None,
         options: List[dict] = None,
         dm_permission: bool = True,
         default_permission: bool = True
