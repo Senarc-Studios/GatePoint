@@ -12,6 +12,15 @@ from fastapi import FastAPI, Request, HTTPException
 
 from typing import Union
 
+def output(content, type_ = None):
+    if type_ == "ERROR":
+        return print(f"ERR: {content}")
+
+    elif type_ == "WARNING":
+        return print(f"WARN: {content}")
+
+    return print(f"INFO: {content}")
+
 class Bot:
     def __init__(self, json: dict):
         setattr(self, "id", json["id"])
@@ -21,12 +30,21 @@ class Bot:
 
 class GatewayClient:
 
-    def __init__(self, api_version: int, secret_key: str, public_key: str, token: str, port: int = 80):
+    def __init__(
+        self,
+        api_version: int,
+        secret_key: str,
+        public_key: str,
+        token: str,
+        port: int = 80,
+        verbose: bool = False
+    ):
         self.discord_prefix = f"https://discord.com/api/v{api_version}"
         self.secret_key = secret_key
         self.public_key = public_key
         self.token = token
         self.port = port
+        self.verbose = verbose
         self.session = None
 
         self.autocomplete = {}
