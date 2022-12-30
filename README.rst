@@ -49,25 +49,19 @@ Quick Example
 .. code:: py
 
     import gatepoint
-    from gatepoint import CommandInteraction
 
-    Client = gatepoint.GatewayClient(
+    InteractionAPI = gatepoint.GatewayClient(
         api_version = 11,
         secret_key = "SECRET",
         public_key = "PUBLIC",
         token =  "TOKEN"
     )
 
-    ping_command = CommandInteraction(
-        name = "ping",
-        description = "Pong!"
-    )
-
-    @Client.on(ping_command)
+    @InteractionAPI.command(name = "ping", description = "Pong!")
     async def ping(interaction):
         await interaction.reply('pong!')
 
-    Client.run()
+    InteractionAPI.run()
 
 You can find more examples in the examples directory.
 
