@@ -22,7 +22,7 @@ from typing import NamedTuple, Literal
 
 from .gateway import GatewayClient
 from .interaction import Interaction, Choice, Option, CommandInteraction, ButtonInteraction
-from .object_types import OptionType
+from .object import (OptionType, Emoji, User, Member, Role, Channel, Message, Attachment, Embed)
 
 class VersionInfo(NamedTuple):
     major: int

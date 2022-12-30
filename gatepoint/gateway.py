@@ -10,7 +10,7 @@ from nacl.exceptions import BadSignatureError
 
 from fastapi import FastAPI, Request, HTTPException
 
-from typing import Callable, Union
+from typing import Callable
 
 def output(content, type_ = None):
     if type_ == "ERROR":
@@ -29,7 +29,6 @@ class Bot:
         setattr(self, "discriminator", json["discriminator"])
 
 class GatewayClient:
-
     def __init__(
         self,
         api_version: int,
@@ -66,7 +65,7 @@ class GatewayClient:
         else:
             raise ValueError("Invalid token provided.")
 
-    async def request(self, method: str, endpoint: str, json: dict = None):
+    async def request(self, method: str, endpoint: str, json: dict = None) -> dict:
         async with aiohttp.ClientSession(
             headers = {
                 "Authorization": f"Bot {self.token}",

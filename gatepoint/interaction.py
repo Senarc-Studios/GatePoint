@@ -1,6 +1,4 @@
-from gatepoint.object_types import OptionType
-
-from typing import List, Optional
+from typing import List
 
 class DictObject:
     def __init__(self, json: dict):
@@ -19,13 +17,13 @@ class Interaction:
                 continue
             setattr(self, key, value)
 
-    def __dict__(self):
+    def __dict__(self) -> dict:
         return self.json_
 
-    def respond(self, response: dict):
+    def respond(self, response: dict) -> dict:
         return response
 
-    def reply(self, content: str, embeds: list = None, ephemeral: bool = False, flags: int = 0):
+    def reply(self, content: str, embeds: list = None, ephemeral: bool = False, flags: int = 0) -> dict:
         return {
             "type": 4,
             "data": {
@@ -33,40 +31,6 @@ class Interaction:
                 "embeds": embeds,
                 "flags": 64 if ephemeral and not flags else flags
             }
-        }
-
-class Choice:
-    def __init__(self, name: str, value: str):
-        self.name = name
-        self.value = value
-
-    def __dict__(self):
-        return {
-            "name": self.name,
-            "value": self.value
-        }
-
-class Option:
-    def __init__(
-        self,
-        type: OptionType,
-        name: str,
-        description: str,
-        options: Optional[list] = [],
-        nsfw: Optional[bool] = False,
-        required: Optional[bool] = False
-    ):
-        self.type = type
-        self.name = name
-        self.description = description
-        self.options = options
-        self.nsfw = nsfw
-        self.required = required
-
-    def __dict__(self):
-        return {
-            "name": self.name,
-            "value": self.value
         }
 
 class Snowflake(int):
@@ -101,7 +65,7 @@ class CommandInteraction:
             "default_permission": self.default_permission
         }
 
-    def __dict__(self):
+    def __dict__(self) -> dict:
         return self.register_json
 
 class ButtonInteraction:
