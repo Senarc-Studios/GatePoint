@@ -3,7 +3,7 @@ import aiohttp
 import asyncio
 import requests
 
-from gatepoint.interaction import Interaction, CommandInteraction, ButtonInteraction
+from .interaction import Interaction, CommandInteraction, ButtonInteraction, MenuInteraction
 
 from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
