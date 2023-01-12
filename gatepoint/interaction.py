@@ -1,4 +1,7 @@
+import json
 from typing import List
+
+from .components.component import ActionRow
 
 class DictObject:
     def __init__(self, json: dict):
@@ -17,14 +20,21 @@ class Interaction:
                 continue
             setattr(self, key, value)
 
-    def __dict__(self) -> dict:
+    def to_dict(self) -> dict:
         return self.json_
 
     def respond(self, response: dict) -> dict:
         return response
 
-    def reply(self, content: str, embeds: list = None, ephemeral: bool = False, flags: int = 0) -> dict:
-        return {
+    def reply(
+        self,
+        content: str = None,
+        components: List[ActionRow] = None,
+        embeds: list = None,
+        ephemeral: bool = False,
+        flags: int = 0
+    ) -> dict:
+        payload = {
             "type": 4,
             "data": {
                 "content": content,
@@ -32,6 +42,24 @@ class Interaction:
                 "flags": 64 if ephemeral and not flags else flags
             }
         }
+
+        if not content and not embeds:
+            raise ValueError("You must provide a content or embeds.")
+
+        if content:
+            payload["data"]["content"] = content
+
+        if embeds:
+            payload["data"]["embeds"] = embeds
+
+        if components:
+            payload["data"]["components"] = [
+                component.to_dict()
+                for component in components
+            ]
+        print(json.dumps(payload))
+
+        return payload
 
 class Snowflake(int):
     def __init__(self, snowflake: int):
