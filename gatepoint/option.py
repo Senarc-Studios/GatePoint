@@ -7,13 +7,13 @@ class Choice:
         self.name = name
         self.value = value
 
-    def __dict__(self):
+    def to_dict(self):
         return {
             "name": self.name,
             "value": self.value
         }
 
-class Option:
+class CommandOption:
     def __init__(
         self,
         type: OptionType,
@@ -28,7 +28,7 @@ class Option:
         self.options = options
         self.required = required
 
-    def __dict__(self):
+    def to_dict(self):
         return {
             "name": self.name,
             "value": self.value
