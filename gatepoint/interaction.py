@@ -71,16 +71,13 @@ class CommandInteraction:
 class ButtonInteraction:
     def __init__(
         self,
-        custom_id: str,
-        label: str,
-        emoji: str = None,
+        custom_id: str
     ):
         self.custom_id = custom_id
-        self.label = label
-        self.emoji = emoji
 
-        self.register_json = {
-            "custom_id": self.custom_id,
-            "label": self.label,
-            "emoji": self.emoji
-        }
+class MenuInteraction:
+    def __init__(
+        self,
+        custom_id: str
+    ):
+        self.custom_id = custom_id
