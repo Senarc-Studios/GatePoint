@@ -9,3 +9,11 @@ class ActionRow:
         if len(self.components) > 5:
             raise ValueError("You can only have 5 components per row")
 
+    def to_dict(self) -> dict:
+        return {
+            "type": 1,
+            "components": [
+                component.to_dict()
+                for component in self.components
+            ]
+        }
