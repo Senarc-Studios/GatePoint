@@ -21,8 +21,10 @@ import logging
 from typing import NamedTuple, Literal
 
 from .gateway import GatewayClient
-from .interaction import Interaction, Choice, Option, CommandInteraction, ButtonInteraction
-from .object import (OptionType, Emoji, User, Member, Role, Channel, Message, Attachment, Embed)
+from .interaction import Interaction, CommandInteraction, ButtonInteraction
+from .option import Choice, CommandOption, MenuOption
+from .objects import (OptionType, Emoji, User, Member, Role, Channel, Attachment, Embed)
+from .components import *
 
 class VersionInfo(NamedTuple):
     major: int
