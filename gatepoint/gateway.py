@@ -204,7 +204,29 @@ class GatewayClient:
                 }
 
             elif interaction_payload["type"] == 3:
-                if interaction_payload["data"]["custom_id"] in self.buttons:
+                print(interaction_payload["data"])
+                if interaction_payload["data"]["component_type"] in (3, 4, 5, 6, 7, 8):
+                    value = interaction_payload["data"]["values"][0] if interaction_payload["data"]["values"] else None
+                    if interaction_payload["data"]["custom_id"] in self.menus:
+                        for event in self.events.get("interaction_receive") or []:
+                            event: Callable
+                            await event(Interaction(interaction_payload))
+
+                        for event in self.events.get("menu_select") or []:
+                            event: Callable
+                            await event(Interaction(interaction_payload))
+
+                        return await self.menus[interaction_payload["data"]["custom_id"]](Interaction(interaction_payload), interaction_payload["data"]["values"])
+
+                    return {
+                        "type": 4,
+                        "data": {
+                            "content": "This menu is not registered with Interaction Gateway API.",
+                            "flags": 64
+                        }
+                    }
+
+                elif interaction_payload["data"]["custom_id"] in self.buttons:
                     for event in self.events.get("interaction_receive") or []:
                         event: Callable
                         await event(Interaction(interaction_payload))
