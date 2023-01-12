@@ -184,7 +184,16 @@ class GatewayClient:
                         event: Callable
                         await event(Interaction(interaction_payload))
 
-                    return await self.commands[interaction_payload["data"]["name"]](Interaction(interaction_payload))
+                    for parameters in self.commands[interaction_payload["data"]["name"]].__annotations__:
+                        if parameters == "interaction":
+                            continue
+
+                        if interaction_payload["data"]["options"]:
+                            input_tuple = ()
+                            for option in interaction_payload["data"]["options"]:
+                                input_tuple = input_tuple.__add__((option["value"]))
+
+                            return await self.commands[interaction_payload["data"]["name"]](Interaction(interaction_payload), *input_tuple)
 
                 return {
                     "type": 4,
