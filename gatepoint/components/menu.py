@@ -78,9 +78,6 @@ class ChannelSelect(SelectMenu):
             "disabled": self.disabled
         }
 
-class StringSelect(SelectMenu):
-    def __init__(self, custom_id: str, options: List[SelectOption], placeholder: str = None, min_values: int = 1, max_values: int = 1, disabled: bool = False):
-        super().__init__(custom_id, options, placeholder, min_values, max_values, disabled)
 
     def to_dict(self):
         return {
