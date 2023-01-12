@@ -49,6 +49,7 @@ class GatewayClient:
         self.autocomplete = {}
         self.commands = {}
         self.buttons = {}
+        self.menus = {}
         self.events = {}
 
         response = requests.get(
@@ -109,6 +110,13 @@ class GatewayClient:
         def decorator(func: Callable):
             interaction = ButtonInteraction(*args, **kwargs)
             self.buttons[interaction.custom_id] = func
+            return func
+        return decorator
+
+    def menu(self, *args, **kwargs):
+        def decorator(func: Callable):
+            interaction = MenuInteraction(*args, **kwargs)
+            self.menus[interaction.custom_id] = func
             return func
         return decorator
 
