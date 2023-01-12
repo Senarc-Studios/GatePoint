@@ -15,6 +15,54 @@ class Emoji(dict):
     def to_dict(self) -> dict:
         return self._dict
 
+class User(dict):
+    def __init__(
+        self,
+        username: str,
+        discriminator: str,
+        id: int,
+        avatar: str = None,
+        bot: bool = False,
+        system: bool = False,
+        mfa_enabled: bool = False,
+        locale: str = None,
+        verified: bool = False,
+        email: str = None,
+        flags: int = None,
+        premium_type: int = None,
+        public_flags: int = None
+    ):
+        self.username = username
+        self.discriminator = discriminator
+        self.id = id
+        self.avatar = avatar
+        self.bot = bot
+        self.system = system
+        self.mfa_enabled = mfa_enabled
+        self.locale = locale
+        self.verified = verified
+        self.email = email
+        self.flags = flags
+        self.premium_type = premium_type
+        self.public_flags = public_flags
+
+    def to_dict(self) -> dict:
+        return {
+            "username": self.username,
+            "discriminator": self.discriminator,
+            "id": self.id,
+            "avatar": self.avatar,
+            "bot": self.bot,
+            "system": self.system,
+            "mfa_enabled": self.mfa_enabled,
+            "locale": self.locale,
+            "verified": self.verified,
+            "email": self.email,
+            "flags": self.flags,
+            "premium_type": self.premium_type,
+            "public_flags": self.public_flags
+        }
+
 class OptionType:
     SUB_COMMAND = 1
     SUB_COMMAND_GROUP = 2
