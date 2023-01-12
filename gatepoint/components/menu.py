@@ -1,6 +1,6 @@
 from typing import List
 
-from ..option import Option
+from ..option import Choice
 
 class SelectMenu:
     def __init__(self, custom_id: str, options: List[Option], placeholder: str = None, min_values: int = 1, max_values: int = 1, disabled: bool = False):
