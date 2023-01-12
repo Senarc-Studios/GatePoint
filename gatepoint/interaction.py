@@ -37,8 +37,6 @@ class Interaction:
         payload = {
             "type": 4,
             "data": {
-                "content": content,
-                "embeds": embeds,
                 "flags": 64 if ephemeral and not flags else flags
             }
         }
