@@ -1,16 +1,19 @@
 import uvicorn
 import aiohttp
-import asyncio
 import requests
 
-from .interaction import Interaction, CommandInteraction, ButtonInteraction, MenuInteraction
+from .interaction import (Interaction,
+    CommandInteraction, ButtonInteraction, MenuInteraction,
+    SubCommandInteraction, SubCommandGroupInteraction)
+from .chunks.chunk import Chunk
+from .option import CommandOption
 
 from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
 
 from fastapi import FastAPI, Request, HTTPException
 
-from typing import Callable
+from typing import Callable, Any, List, Optional
 
 def output(content, type_ = None):
     if type_ == "ERROR":
