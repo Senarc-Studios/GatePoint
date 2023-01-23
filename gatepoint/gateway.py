@@ -68,6 +68,7 @@ class GatewayClient:
         self.commands: dict = {}
         self.events: dict = {}
         self.interactions: dict = {}
+        self.loaded_chunks: List[Chunk] = []
         self.menus: dict = {}
         self.subcommands = {}
 
@@ -247,6 +248,58 @@ class GatewayClient:
 
             return func
         return decorator
+
+    def import_chunk(self, chunk: Chunk):
+        """## Import Chunk
+        Imports a chunk into the bot.
+
+        Args:
+            `chunk` (`Chunk`): Chunk to import.
+        """
+        for command in chunk.package["commands"]:
+            self.commands[command.name] = command
+
+        for button in chunk.package["buttons"]:
+            self.buttons[button.custom_id] = button
+
+        for menu in chunk.menus:
+            self.menus[menu.custom_id] = menu
+
+    def import_chunks(self, chunks: List[Chunk]):
+        """## Import Chunks
+        Imports chunks into the bot.
+
+        Args:
+            `chunks` (`List[Chunk]`): Chunks to import.
+        """
+        for chunk in chunks:
+            self.import_chunk(chunk)
+
+    def offload_chunk(self, chunk: Chunk):
+        """## Offload Chunk
+        Offloads a chunk from the bot.
+
+        Args:
+            `chunk` (`Chunk`): Chunk to offload.
+        """
+        for command in chunk.commands:
+            self.commands.pop(command.name)
+
+        for button in chunk.buttons:
+            self.buttons.pop(button.custom_id)
+
+        for menu in chunk.menus:
+            self.menus.pop(menu.custom_id)
+
+    def offload_chunks(self, chunks: List[Chunk]):
+        """## Offload Chunks
+        Offloads chunks from the bot.
+
+        Args:
+            `chunks` (`List[Chunk]`): List of `Chunk`s to offload.
+        """
+        for chunk in chunks:
+            self.offload_chunk(chunk)
 
     def run(self):
         """## Run
