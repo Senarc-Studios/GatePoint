@@ -150,6 +150,52 @@ class GatewayClient:
                             json = interaction.register_json
                         )
                     )
+            self.interactions[interaction.name] = interaction.register_json
+            return func
+        return decorator
+
+    def add_option(
+        self,
+        type: Union[OptionType, str],
+        name: str,
+        description: str,
+        options: Optional[list] = [],
+        required: Optional[bool] = False
+    ):
+        """## Option Decorator
+        Command Option that can be used in a Slash Command for parameter inputs.
+
+        Args:
+            `type` (`OptionType` or `str`): The type of option.
+            `name` (`str`): Name of option parameter.
+            `description` (`str`): Description of option parameter. 
+            `options` (`Optional[list]`): Other options within the option. Defaults to `[]`.
+            `required` (`Optional[bool]`): Is the option required to be filled in. Defaults to `False`.
+        """
+        def decorator(func: Callable):
+            option = CommandOption(
+                type = type,
+                name = name,
+                description = description,
+                options = options,
+                required = required
+            )
+            for command_name, command_func in self.commands.items():
+                if command_func == func:
+                    self.commands[command_name].options.append(option)
+            return func
+        return decorator
+
+            `options` (`Optional[list]`): Other options within the command. Defaults to `[]`.
+            `dm_permission` (`Optional[bool]`): Whether the command is enabled in DMs. Defaults to `True`.
+            `default_permission` (`Optional[bool]`): Whether the command is enabled by default when the app is added to a guild. Defaults to `True`.
+        """
+        def decorator(func: Callable):
+            if name not in self.subcommands:
+                self.subcommands[name] = func
+            return func
+            if not description:
+                decorator.parent = description
 
             else:
                 asyncio.run(

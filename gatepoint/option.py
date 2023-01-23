@@ -40,8 +40,12 @@ class CommandOption:
 
     def to_dict(self):
         return {
+            "type": self.type,
             "name": self.name,
-            "value": self.value
+            "description": self.description,
+            "options": self.options,
+            "required": self.required
+        }
         }
 
 class MenuOption:
