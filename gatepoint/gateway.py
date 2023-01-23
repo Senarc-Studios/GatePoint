@@ -60,14 +60,16 @@ class GatewayClient:
         self.public_key = public_key
         self.token = token
         self.port = port
-        self.verbose = verbose
-        self.session = None
+        self.verbose: bool = verbose
+        self.session: Any = None
 
-        self.autocomplete = {}
-        self.commands = {}
-        self.buttons = {}
-        self.menus = {}
-        self.events = {}
+        self.autocomplete: dict = {}
+        self.buttons: dict = {}
+        self.commands: dict = {}
+        self.events: dict = {}
+        self.interactions: dict = {}
+        self.menus: dict = {}
+        self.subcommands = {}
 
         response = requests.get(
             f"{self.discord_prefix}/users/@me",
@@ -109,7 +111,15 @@ class GatewayClient:
             ) as response:
                 return await response.json()
 
-    def command(self, *args, **kwargs):
+    def command(
+        self,
+        name: str,
+        description: str = None,
+        guild_ids: List[Snowflake] = None,
+        options: List[dict] = None,
+        dm_permission: bool = True,
+        default_permission: bool = True
+    ):
         """## Command Decorator
         Slash Command that can be used in a Discord Server.
 
@@ -122,7 +132,14 @@ class GatewayClient:
             `default_permission` (`Optional[bool]`): Whether the command is enabled by default when the app is added to a guild. Defaults to `True`.
         """
         def decorator(func: Callable):
-            interaction = CommandInteraction(*args, **kwargs)
+            interaction = CommandInteraction(
+                name = name,
+                description = description,
+                guild_ids = guild_ids,
+                options = options,
+                dm_permission = dm_permission,
+                default_permission = default_permission
+            )
             self.commands[interaction.name] = func
             if interaction.guild_only:
                 for id_ in interaction.guild_ids:
@@ -145,9 +162,15 @@ class GatewayClient:
             return func
         return decorator
 
-    def button(self, *args, **kwargs):
+    def button(self, custom_id: str):
+        """## Button Decorator
+        Button that can be used in a Discord Bot.
+
+        Args:
+            `custom_id` (`str`): Custom ID of button.
+        """
         def decorator(func: Callable):
-            interaction = ButtonInteraction(*args, **kwargs)
+            interaction = ButtonInteraction(custom_id = custom_id)
             self.buttons[interaction.custom_id] = func
             return func
         return decorator
