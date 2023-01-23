@@ -22,6 +22,16 @@ class CommandOption:
         options: Optional[list] = [],
         required: Optional[bool] = False
     ):
+        """## Command Option
+        Command Option that can be used in a Slash Command for parameter inputs.
+
+        Args:
+            `type` (`OptionType` or `str`): The type of option.
+            `name` (`str`): Name of option parameter.
+            `description` (`str`): Description of option parameter. 
+            `options` (`Optional[list]`): Other options within the option. Defaults to `[]`.
+            `required` (`Optional[bool]`): Is the option required to be filled in. Defaults to `False`.
+        """
         self.type = type
         self.name = name
         self.description = description

@@ -12,6 +12,9 @@ class DictObject:
             setattr(self, key, value)
 
 class Interaction:
+    """## Interaction Object
+    Represents the interaction sent from Discord.
+    """
     def __init__(self, interaction_payload: dict):
         self.json_ = interaction_payload
         for key, value in interaction_payload.items():
@@ -24,6 +27,16 @@ class Interaction:
         return self.json_
 
     def respond(self, response: dict) -> dict:
+        """## Interaction.respond
+        Respond with a JSON to an Interaction from Discord. 
+        This is used internally by the InteractionAPI.
+
+        Args:
+            `response` (`dict`): Payload to send to Discord.
+
+        Returns:
+            `dict`: Payload to send to Discord.
+        """
         return response
 
     def reply(
@@ -34,6 +47,29 @@ class Interaction:
         ephemeral: bool = False,
         flags: int = 0
     ) -> dict:
+        """## Interaction.reply
+        Reply with a JSON to an Interaction from Discord.
+
+        Args:
+            `content` (`str`): Content of the message.
+            `components` (`List[ActionRow]`): Components of the message.
+            `embeds` (`list`): Embeds of the message.
+            `ephemeral` (`bool`): Whether the message is ephemeral.
+            `flags` (`int`): Message flags.
+
+        Returns:
+            `dict`: Payload to send to Discord.
+
+        ## Example::
+
+            @InteractionAPI.command("example")
+            async def example(interaction):
+                return interaction.reply(
+                    content = "Thank you for using GatePoint Library API!",
+                    ephemeral = True
+                )
+            # Test the command by typing `/example` in a Discord Server.
+        """
         payload = {
             "type": 4,
             "data": {
@@ -61,6 +97,15 @@ class Interaction:
 
 class Snowflake(int):
     def __init__(self, snowflake: int):
+        """## Snowflake Object
+        Snowflake ID found in any Discord ID.
+
+        Args:
+            `snowflake` (`int`): Snowflake ID.
+
+        Raises: 
+            `ValueError`: Invalid snowflake.
+        """
         if not len(str(snowflake)) in (17, 18, 19):
             raise ValueError("Invalid snowflake.")
 
@@ -76,6 +121,17 @@ class CommandInteraction:
         dm_permission: bool = True,
         default_permission: bool = True
     ):
+        """## Command Interaction Object
+        Slash Command that can be used in a Discord Server.
+
+        Args:
+            `name` (`str`): Name of command.
+            `description` (`str`): Description of command. 
+            `guild_ids` (`Optional[List[Snowflake]]`): List of guild IDs to register command to. Defaults to `None`.
+            `options` (`Optional[list]`): Other options within the command. Defaults to `[]`.
+            `dm_permission` (`Optional[bool]`): Whether the command is enabled in DMs. Defaults to `True`.
+            `default_permission` (`Optional[bool]`): Whether the command is enabled by default when the app is added to a guild. Defaults to `True`.
+        """
         self.name = name
         self.description = description or "No description."
         self.guild_ids = guild_ids
@@ -99,6 +155,12 @@ class ButtonInteraction:
         self,
         custom_id: str
     ):
+        """## Button Interaction Object
+        Button that can be used in a Discord Server.
+
+        Args:
+            `custom_id` (`str`): Custom ID of button.
+        """
         self.custom_id = custom_id
 
 class MenuInteraction:
@@ -106,4 +168,10 @@ class MenuInteraction:
         self,
         custom_id: str
     ):
+        """## Menu Interaction Object
+        Menu that can be used in a Discord Server.
+
+        Args:
+            `custom_id` (`str`): Custom ID of menu.
+        """
         self.custom_id = custom_id

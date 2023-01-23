@@ -38,6 +38,20 @@ class GatewayClient:
         port: int = 80,
         verbose: bool = False
     ):
+        """## GatewayClient
+        The main class for building your Interaction API for Discord.
+
+        Args:
+            `secret_key` (`str`): The Discord Application's Secret Key.
+            `public_key` (`str`): The Discord Application's Public Key.
+            `token` (`str`): Bot's token.
+            `api_version` (`Optional[int]`): The API version your requests will go through. Defaults to `10`.
+            `port` (`Optional[int]`): The port your API will be hosted in. Defaults to `80`.
+            `verbose` (`Optional[bool]`): Enable to see errors or requests from discord. Defaults to `False`.
+
+        Raises:
+            ValueError: Invalid token provided.
+        """
         self.discord_prefix = f"https://discord.com/api/v{api_version}"
         self.secret_key = secret_key
         self.public_key = public_key
@@ -67,6 +81,17 @@ class GatewayClient:
             raise ValueError("Invalid token provided.")
 
     async def request(self, method: str, endpoint: str, json: dict = None) -> dict:
+        """## Discord API Request
+        Sends a request to the Discord API.
+
+        Args:
+            method (str): HTTP methods such as `GET`, `POST`, `PUT`, `PATCH`, `DELETE`.
+            endpoint (str): Discord API endpoint.
+            json (dict, optional): The data you want in the request. Defaults to None.
+
+        Returns:
+            dict: Response JSON from Discord API.
+        """
         async with aiohttp.ClientSession(
             headers = {
                 "Authorization": f"Bot {self.token}",
@@ -82,6 +107,17 @@ class GatewayClient:
                 return await response.json()
 
     def command(self, *args, **kwargs):
+        """## Command Decorator
+        Slash Command that can be used in a Discord Server.
+
+        Args:
+            `name` (`str`): Name of command.
+            `description` (`str`): Description of command. 
+            `guild_ids` (`Optional[List[Snowflake]]`): List of guild IDs to register command to. Defaults to `None`.
+            `options` (`Optional[list]`): Other options within the command. Defaults to `[]`.
+            `dm_permission` (`Optional[bool]`): Whether the command is enabled in DMs. Defaults to `True`.
+            `default_permission` (`Optional[bool]`): Whether the command is enabled by default when the app is added to a guild. Defaults to `True`.
+        """
         def decorator(func: Callable):
             interaction = CommandInteraction(*args, **kwargs)
             self.commands[interaction.name] = func
@@ -113,14 +149,26 @@ class GatewayClient:
             return func
         return decorator
 
-    def menu(self, *args, **kwargs):
+    def menu(self, custom_id: str):
+        """## Menu Decorator
+        Menu that can be used in a Discord Bot.
+
+        Args:
+            `custom_id` (`str`): Custom ID of menu.
+        """
         def decorator(func: Callable):
-            interaction = MenuInteraction(*args, **kwargs)
+            interaction = MenuInteraction(custom_id = custom_id)
             self.menus[interaction.custom_id] = func
             return func
         return decorator
 
     def on(self, event: str):
+        """## Event Decorator
+        Events that are fired on your Discord Bot.
+
+        Args:
+            `event` (`str`): Event name.
+        """
         def decorator(func: Callable):
             event_list = self.events.get(event).append(func) if self.events.get(event) else [func]
             self.events[event] = event_list
@@ -129,6 +177,15 @@ class GatewayClient:
         return decorator
 
     def run(self):
+        """## Run
+        Runs the Interaction API.
+
+        ## Troubleshooting
+        - If you require assistance/help, you may contact us at [Discord](https://discord.gg/5YY3W83YWg).
+        - If your bot stops as soon as you run it, you can view by specifying `verbose = True` in GatewayClient.
+        - If you are getting an error saying that the port is already in use, you fix it by mentioning a port in GatewayClient like `port = 8000` as an argument.
+        - If your bot stops responding to interactions, you can fix it by restarting the bot.
+        """
         app = FastAPI()
 
         @app.on_event("startup")
