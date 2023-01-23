@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 from .objects import OptionType
 
@@ -16,7 +16,7 @@ class Choice:
 class CommandOption:
     def __init__(
         self,
-        type: OptionType,
+        type: Union[OptionType, int],
         name: str,
         description: str,
         options: Optional[list] = [],
