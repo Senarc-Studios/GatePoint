@@ -34,12 +34,12 @@ class Bot:
 class GatewayClient:
     def __init__(
         self,
-        api_version: int,
         secret_key: str,
         public_key: str,
         token: str,
-        port: int = 80,
-        verbose: bool = False
+        api_version: Optional[int] = 10,
+        port: Optional[int] = 80,
+        verbose: Optional[bool] = False
     ):
         """## GatewayClient
         The main class for building your Interaction API for Discord.
