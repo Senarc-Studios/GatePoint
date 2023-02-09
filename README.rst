@@ -48,18 +48,18 @@ Quick Example
 
 .. code:: py
 
-    import gatepoint
+    from gatepoint import GatewayClient
 
-    InteractionAPI = gatepoint.GatewayClient(
+    InteractionAPI = GatewayClient(
         api_version = 11,
         secret_key = "SECRET",
         public_key = "PUBLIC",
-        token =  "TOKEN"
+        token = "TOKEN"
     )
 
     @InteractionAPI.command(name = "ping", description = "Pong!")
     async def ping(interaction):
-        await interaction.reply('pong!')
+        return interaction.reply('pong!')
 
     InteractionAPI.run()
 
