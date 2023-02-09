@@ -1,7 +1,8 @@
 import json
 from typing import List
 
-from .components.component import ActionRow
+from .components.action_row import ActionRow
+from .objects import Snowflake
 
 class DictObject:
     def __init__(self, json: dict):
@@ -95,22 +96,6 @@ class Interaction:
 
         return payload
 
-class Snowflake(int):
-    def __init__(self, snowflake: int):
-        """## Snowflake Object
-        Snowflake ID found in any Discord ID.
-
-        Args:
-            `snowflake` (`int`): Snowflake ID.
-
-        Raises: 
-            `ValueError`: Invalid snowflake.
-        """
-        if not len(str(snowflake)) in (17, 18, 19):
-            raise ValueError("Invalid snowflake.")
-
-        self.snowflake = snowflake
-
 class CommandInteraction:
     def __init__(
         self,
@@ -145,6 +130,64 @@ class CommandInteraction:
             "description": self.description,
             "options": self.options,
             "default_permission": self.default_permission
+        }
+
+    def __dict__(self) -> dict:
+        return self.register_json
+
+class SubCommandInteraction:
+    def __init__(
+        self,
+        name: str,
+        description: str = None,
+        options: List[dict] = None
+    ):
+        """## Sub Command Interaction Object
+        Sub Command that can be used in a Discord Server.
+
+        Args:
+            `name` (`str`): Name of command.
+            `description` (`str`): Description of command.
+            `options` (`Optional[list]`): Other options within the command. Defaults to `[]`.
+        """
+        self.name = name
+        self.description = description or "No description."
+        self.options = options
+
+        self.register_json = {
+            "name": self.name,
+            "description": self.description,
+            "options": self.options,
+            "type": 1
+        }
+
+    def __dict__(self) -> dict:
+        return self.register_json
+
+class SubCommandGroupInteraction:
+    def __init__(
+        self,
+        name: str,
+        description: str = None,
+        options: List[dict] = None
+    ):
+        """## Sub Command Group Interaction Object
+        Sub Command Group that can be used in a Discord Server.
+
+        Args:
+            `name` (`str`): Name of command.
+            `description` (`str`): Description of command.
+            `options` (`Optional[list]`): Other options within the command. Defaults to `[]`.
+        """
+        self.name = name
+        self.description = description or "No description."
+        self.options = options
+
+        self.register_json = {
+            "name": self.name,
+            "description": self.description,
+            "options": self.options,
+            "type": 2
         }
 
     def __dict__(self) -> dict:

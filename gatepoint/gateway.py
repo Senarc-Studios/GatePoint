@@ -6,14 +6,15 @@ from .interaction import (Interaction,
     CommandInteraction, ButtonInteraction, MenuInteraction,
     SubCommandInteraction, SubCommandGroupInteraction)
 from .chunks.chunk import Chunk
+from .objects import Snowflake, OptionType
 from .option import CommandOption
 
 from nacl.signing import VerifyKey
-from nacl.exceptions import BadSignatureError
+from nacl.exceptions import BadSignatureError 
 
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, Request, HTTPException 
 
-from typing import Callable, Any, List, Optional
+from typing import Callable, Any, List, Union, Optional
 
 def output(content, type_ = None):
     if type_ == "ERROR":
@@ -66,6 +67,7 @@ class GatewayClient:
         self.autocomplete: dict = {}
         self.buttons: dict = {}
         self.commands: dict = {}
+        self.guild_commands: dict = {}
         self.events: dict = {}
         self.interactions: dict = {}
         self.loaded_chunks: List[Chunk] = []
@@ -142,15 +144,6 @@ class GatewayClient:
                 default_permission = default_permission
             )
             self.commands[interaction.name] = func
-            if interaction.guild_only:
-                for id_ in interaction.guild_ids:
-                    asyncio.run(
-                        self.request(
-                            "POST",
-                            f"/applications/{self.bot.id}/guilds/{id_}/commands",
-                            json = interaction.register_json
-                        )
-                    )
             self.interactions[interaction.name] = interaction.register_json
             return func
         return decorator
@@ -187,6 +180,44 @@ class GatewayClient:
             return func
         return decorator
 
+    def add_subcommand_group(
+        self,
+        name: str,
+        description: str = None,
+        options: List[dict] = None
+    ) -> SubCommandGroupInteraction:
+        """## Subcommand Group Decorator
+        Subcommand Group to create other Subcommands.   
+
+        Args:
+            `name` (`str`): Name of subcommand group.
+            `description` (`str`): Description of subcommand group. 
+            `options` (`Optional[list]`): Other options within the subcommand group. Defaults to `[]`.
+        """
+        interaction = SubCommandGroupInteraction(
+            name = name,
+            description = description,
+            options = options
+        )
+        self.commands[interaction.name] = interaction
+        return interaction
+
+    def basecommand(
+        self,
+        name: str,
+        description: str = None,
+        guild_ids: List[Snowflake] = None,
+        options: List[dict] = None,
+        dm_permission: bool = True,
+        default_permission: bool = True
+    ):
+        """## Base Command Decorator
+        Base Command for Slash Commands and Slash Command Groups.
+
+        Args:
+            `name` (`str`): Name of base command.
+            `description` (`str`): Description of base command. 
+            `guild_ids` (`Optional[List[Snowflake]]`): List of guild IDs to register command to. Defaults to `None`.
             `options` (`Optional[list]`): Other options within the command. Defaults to `[]`.
             `dm_permission` (`Optional[bool]`): Whether the command is enabled in DMs. Defaults to `True`.
             `default_permission` (`Optional[bool]`): Whether the command is enabled by default when the app is added to a guild. Defaults to `True`.
@@ -199,13 +230,41 @@ class GatewayClient:
                 decorator.parent = description
 
             else:
-                asyncio.run(
-                    self.request(
-                        "POST",
-                        f"/applications/{self.bot.id}/commands",
-                        json = interaction.register_json
-                    )
-                )
+                decorator.name = name
+                decorator.parent = name
+                decorator.description = description
+                decorator.guild_ids = guild_ids
+                decorator.options = options
+                decorator.dm_permission = dm_permission
+                decorator.default_permission = default_permission
+        return decorator
+
+    def subcommand(
+        self,
+        name: str,
+        description: str = None,
+        options: List[dict] = None
+    ):
+        """## Subcommand Decorator
+        Subcommand that can be used in a Slash Command.
+
+        Args:       
+            `name` (`str`): Name of subcommand.
+            `description` (`str`): Description of subcommand.
+            `options` (`Optional[list]`): Other options within the subcommand. Defaults to `[]`.
+        """
+        def decorator(func: Callable):
+            if not getattr(func, "parent", None):
+                raise Exception("Base Command not found.")
+
+            interaction = SubCommandInteraction(
+                parent = getattr(func, "parent", None),
+                name = name,
+                description = description,
+                options = options
+            )
+
+            self.commands[interaction.name] = func
             return func
         return decorator
 
@@ -224,7 +283,7 @@ class GatewayClient:
 
     def menu(self, custom_id: str):
         """## Menu Decorator
-        Menu that can be used in a Discord Bot.
+        Menu UI Element to pick options on Discord.
 
         Args:
             `custom_id` (`str`): Custom ID of menu.
@@ -232,6 +291,19 @@ class GatewayClient:
         def decorator(func: Callable):
             interaction = MenuInteraction(custom_id = custom_id)
             self.menus[interaction.custom_id] = func
+            return func
+        return decorator
+
+    def message_command(self, custom_id: str):
+        """## Message Command Decorator
+        Command that can be invoked in a Discord Message.
+
+        Args:
+            `name` (`str`): Name of message command.
+        """
+        def decorator(func: Callable):
+            interaction = MessageCommandInteraction(custom_id = custom_id)
+            self.message_commands[interaction.name] = func
             return func
         return decorator
 
@@ -249,7 +321,7 @@ class GatewayClient:
             return func
         return decorator
 
-    def import_chunk(self, chunk: Chunk):
+    def import_chunk(self, chunk: Chunk) -> Chunk:
         """## Import Chunk
         Imports a chunk into the bot.
 
@@ -265,7 +337,9 @@ class GatewayClient:
         for menu in chunk.menus:
             self.menus[menu.custom_id] = menu
 
-    def import_chunks(self, chunks: List[Chunk]):
+        return chunk
+
+    def import_chunks(self, chunks: List[Chunk]) -> List[Chunk]:
         """## Import Chunks
         Imports chunks into the bot.
 
@@ -274,8 +348,9 @@ class GatewayClient:
         """
         for chunk in chunks:
             self.import_chunk(chunk)
+        return chunks
 
-    def offload_chunk(self, chunk: Chunk):
+    def offload_chunk(self, chunk: Chunk) -> Chunk:
         """## Offload Chunk
         Offloads a chunk from the bot.
 
@@ -291,7 +366,9 @@ class GatewayClient:
         for menu in chunk.menus:
             self.menus.pop(menu.custom_id)
 
-    def offload_chunks(self, chunks: List[Chunk]):
+        return chunk
+
+    def offload_chunks(self, chunks: List[Chunk]) -> List[Chunk]:
         """## Offload Chunks
         Offloads chunks from the bot.
 
@@ -300,6 +377,27 @@ class GatewayClient:
         """
         for chunk in chunks:
             self.offload_chunk(chunk)
+        return chunks
+
+    def sync_commands(self, guild: Optional[Snowflake] = None) -> None:
+        if guild:
+            # Fetch commands in guild.
+            commands = self.request("GET", f"/applications/{self.client_id}/guilds/{guild}/commands")
+            for command in self.guild_commands:
+                if command not in commands:
+                    self.request("POST", f"/applications/{self.client_id}/guilds/{guild}/commands", json = command)
+                else:
+                    self.request("PATCH", f"/applications/{self.client_id}/guilds/{guild}/commands/{command.id}", json = command)
+            return None
+
+        # Fetch commands in global.
+        commands = self.request("GET", f"/applications/{self.client_id}/commands")
+        for command in self.commands:
+            if command not in commands:
+                self.request("POST", f"/applications/{self.client_id}/commands", json = command)
+            else:
+                self.request("PATCH", f"/applications/{self.client_id}/commands/{command.id}", json = command)
+        return None
 
     def run(self):
         """## Run

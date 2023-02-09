@@ -46,6 +46,25 @@ class CommandOption:
             "options": self.options,
             "required": self.required
         }
+
+class SubCommand:
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        options: Optional[list] = []
+    ):
+        self.type = OptionType.sub_command
+        self.name = name
+        self.description = description
+        self.options = options
+
+    def to_dict(self):
+        return {
+            "type": self.type,
+            "name": self.name,
+            "description": self.description,
+            "options": self.options
         }
 
 class MenuOption:

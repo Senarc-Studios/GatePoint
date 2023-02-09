@@ -1,3 +1,19 @@
+class Snowflake(int):
+    def __init__(self, snowflake: int):
+        """## Snowflake Object
+        Snowflake ID found in any Discord ID.
+
+        Args:
+            `snowflake` (`int`): Snowflake ID.
+
+        Raises: 
+            `ValueError`: Invalid snowflake.
+        """
+        if not len(str(snowflake)) in (17, 18, 19):
+            raise ValueError("Invalid snowflake.")
+
+        self.snowflake = snowflake
+
 class Emoji(dict):
     def __init__(self, name: str, id: int = None, animated: bool = False):
         self.name = name
